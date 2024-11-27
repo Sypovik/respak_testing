@@ -15,15 +15,15 @@ public class Farmer {
     @Column(nullable = false, unique = true)
     private String organizationName; // Название организации
 
-    @Enumerated(EnumType.STRING)
-    @Column(nullable = false)
-    private LegalForm legalForm; // Организационно-правовая форма
-
     public enum LegalForm {
         ЮР, // Юридическое лицо
         ИП, // Индивидуальный предприниматель
         ФЛ // Физическое лицо
     }
+
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    private LegalForm legalForm; // Organizational and legal form
 
     @Column(nullable = false, unique = true, length = 12)
     private String inn; // ИНН
