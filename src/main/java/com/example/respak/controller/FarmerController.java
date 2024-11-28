@@ -28,10 +28,11 @@ public class FarmerController {
             @RequestParam(required = false) String inn,
             @RequestParam(required = false) Long districtId,
             @RequestParam(required = false) LocalDate startDate,
-            @RequestParam(required = false) LocalDate endDate) {
+            @RequestParam(required = false) LocalDate endDate,
+            @RequestParam(required = false) boolean archived) {
         List<farmerDtoWithoutArchive> farmers = farmerService.getFarmers(organizationName, legalForm, inn, districtId,
                 startDate,
-                endDate);
+                endDate, archived);
         return ResponseEntity.ok(farmers);
     }
 

@@ -28,4 +28,6 @@ public interface FarmerRepository extends JpaRepository<Farmer, Long> {
 
     // Получение всех архивных фермеров
     List<Farmer> findByArchivedFalse();
+
+    List<Farmer> findByArchivedTrue();
 }

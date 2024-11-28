@@ -26,7 +26,7 @@ public class FarmerService {
     // Получение списка фермеров с фильтрацией
     public List<farmerDtoWithoutArchive> getFarmers(String organizationName, Farmer.LegalForm legalForm, String inn,
             Long districtId,
-            LocalDate startDate, LocalDate endDate) {
+            LocalDate startDate, LocalDate endDate, boolean archived) {
 
         List<Farmer> farmers = farmerRepository.findByArchivedFalse();
 
@@ -42,6 +42,8 @@ public class FarmerService {
             farmers = farmerRepository.findByRegistrationDistrictAndArchivedFalse(district);
         } else if (startDate != null && endDate != null) {
             farmers = farmerRepository.findByRegistrationDateBetweenAndArchivedFalse(startDate, endDate);
+        } else if (archived) {
+            farmers = farmerRepository.findByArchivedTrue();
         }
         return farmers.stream()
                 .map(d -> new farmerDtoWithoutArchive(d))
