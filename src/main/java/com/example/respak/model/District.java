@@ -10,6 +10,8 @@ public class District {
     private Long id;
     @Column(nullable = false, unique = true)
     private String name;
+    @Column(nullable = true, unique = true)
+    private String code; // Код района
     @Column(nullable = false)
     private boolean archived; // Статус архивности
 
@@ -31,5 +33,17 @@ public class District {
 
     public boolean isArchived() {
         return archived;
+    }
+
+    public void setArchived(boolean archived) {
+        this.archived = archived;
+    }
+
+    public String getCode() {
+        return code;
+    }
+
+    public void setCode(String code) {
+        this.code = code;
     }
 }

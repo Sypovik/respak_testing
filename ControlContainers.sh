@@ -13,6 +13,6 @@ elif [ $1 == "inputApp" ]; then
     docker exec -it $NAME_APP /bin/bash
 elif [ $1 == "inputDB" ]; then
     docker exec -it $NAME_SQL psql -U postgres -d mydb
-elif [ $1 == "start mvn" ]; then
+elif [ $1 == "startMvn" ]; then
     docker exec -it $NAME_APP mvn spring-boot:run
 fi
