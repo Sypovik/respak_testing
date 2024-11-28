@@ -10,20 +10,22 @@ import java.util.List;
 public interface FarmerRepository extends JpaRepository<Farmer, Long> {
 
     // Получение списка фермеров с фильтрацией по названию организации
-    List<Farmer> findByOrganizationNameContainingIgnoreCase(String name);
+    List<Farmer> findByOrganizationNameContainingIgnoreCaseAndArchivedFalse(String name);
 
     // Фильтрация по организационно-правовой форме
-    List<Farmer> findByLegalForm(Farmer.LegalForm legalForm);
+    List<Farmer> findByLegalFormAndArchivedFalse(Farmer.LegalForm legalForm);
 
     // Фильтрация по ИНН
+    List<Farmer> findByInnAndArchivedFalse(String inn);
+
     List<Farmer> findByInn(String inn);
 
     // Фильтрация по району регистрации
-    List<Farmer> findByRegistrationDistrict(District district);
+    List<Farmer> findByRegistrationDistrictAndArchivedFalse(District district);
 
     // Фильтрация по дате регистрации
-    List<Farmer> findByRegistrationDateBetween(LocalDate startDate, LocalDate endDate);
+    List<Farmer> findByRegistrationDateBetweenAndArchivedFalse(LocalDate startDate, LocalDate endDate);
 
-    // Получение всех неархивных фермеров
+    // Получение всех архивных фермеров
     List<Farmer> findByArchivedFalse();
 }

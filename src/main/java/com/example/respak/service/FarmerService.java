@@ -1,5 +1,7 @@
 package com.example.respak.service;
 
+import com.example.dto.FarmerDto;
+import com.example.dto.farmerDtoWithoutArchive;
 import com.example.respak.model.District;
 import com.example.respak.model.Farmer;
 import com.example.respak.repository.DistrictRepository;
@@ -8,6 +10,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class FarmerService {
@@ -21,31 +24,59 @@ public class FarmerService {
     }
 
     // Получение списка фермеров с фильтрацией
-    public List<Farmer> getFarmers(String organizationName, Farmer.LegalForm legalForm, String inn, Long districtId,
+    public List<farmerDtoWithoutArchive> getFarmers(String organizationName, Farmer.LegalForm legalForm, String inn,
+            Long districtId,
             LocalDate startDate, LocalDate endDate) {
+
+        List<Farmer> farmers = farmerRepository.findByArchivedFalse();
+
         if (organizationName != null) {
-            return farmerRepository.findByOrganizationNameContainingIgnoreCase(organizationName);
+            farmers = farmerRepository.findByOrganizationNameContainingIgnoreCaseAndArchivedFalse(organizationName);
         } else if (legalForm != null) {
-            return farmerRepository.findByLegalForm(legalForm);
+            farmers = farmerRepository.findByLegalFormAndArchivedFalse(legalForm);
         } else if (inn != null) {
-            return farmerRepository.findByInn(inn);
+            farmers = farmerRepository.findByInnAndArchivedFalse(inn);
         } else if (districtId != null) {
             District district = districtRepository.findById(districtId)
                     .orElseThrow(() -> new RuntimeException("Район не найден"));
-            return farmerRepository.findByRegistrationDistrict(district);
+            farmers = farmerRepository.findByRegistrationDistrictAndArchivedFalse(district);
         } else if (startDate != null && endDate != null) {
-            return farmerRepository.findByRegistrationDateBetween(startDate, endDate);
+            farmers = farmerRepository.findByRegistrationDateBetweenAndArchivedFalse(startDate, endDate);
         }
-        return farmerRepository.findByArchivedFalse();
+        return farmers.stream()
+                .map(d -> new farmerDtoWithoutArchive(d))
+                .collect(Collectors.toList());
     }
 
     // Добавление нового фермера
-    public Farmer addFarmer(Farmer farmer) {
+    public Farmer addFarmer(FarmerDto farmer) {
         if (farmerRepository.findByInn(farmer.getInn()).isEmpty()) {
-            return farmerRepository.save(farmer);
+            return saveFarmer(farmer);
         } else {
             throw new IllegalArgumentException("Фермер с таким ИНН уже существует");
         }
+    }
+
+    public Farmer saveFarmer(FarmerDto farmerDto) {
+        Farmer farmer = new Farmer();
+        farmer.setOrganizationName(farmerDto.getOrganizationName());
+        farmer.setLegalForm(Farmer.LegalForm.valueOf(farmerDto.getLegalForm()));
+        farmer.setInn(farmerDto.getInn());
+        farmer.setKpp(farmerDto.getKpp());
+        farmer.setOgrn(farmerDto.getOgrn());
+        farmer.setRegistrationDate(farmerDto.getRegistrationDate());
+        farmer.setArchived(farmerDto.isArchived());
+
+        // Найти район регистрации по ID
+        District registrationDistrict = districtRepository.findById(farmerDto.getRegistrationDistrictId())
+                .orElseThrow(() -> new IllegalArgumentException("District not found"));
+        farmer.setRegistrationDistrict(registrationDistrict);
+
+        // Найти районы посевных полей по их ID
+        List<District> sowingDistricts = districtRepository.findAllById(farmerDto.getSowingDistrictIds());
+        farmer.setSowingDistricts(sowingDistricts);
+
+        return farmerRepository.save(farmer);
     }
 
     // Архивирование фермера

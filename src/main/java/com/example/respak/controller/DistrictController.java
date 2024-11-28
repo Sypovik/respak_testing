@@ -1,5 +1,6 @@
 package com.example.respak.controller;
 
+import com.example.dto.DistrictDtoWithoutArchive;
 import com.example.respak.model.District;
 import com.example.respak.service.DistrictService;
 import org.springframework.http.ResponseEntity;
@@ -19,10 +20,11 @@ public class DistrictController {
 
     // Получение списка районов с фильтрацией
     @GetMapping
-    public ResponseEntity<List<District>> getDistricts(
+    public ResponseEntity<List<DistrictDtoWithoutArchive>> getDistricts(
+            @RequestParam(required = false) Long id,
             @RequestParam(required = false) String name,
             @RequestParam(required = false) String code) {
-        List<District> districts = districtService.getDistricts(name, code);
+        List<DistrictDtoWithoutArchive> districts = districtService.getDistricts(id, name, code);
         return ResponseEntity.ok(districts);
     }
 

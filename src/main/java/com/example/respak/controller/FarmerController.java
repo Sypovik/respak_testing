@@ -1,5 +1,7 @@
 package com.example.respak.controller;
 
+import com.example.dto.FarmerDto;
+import com.example.dto.farmerDtoWithoutArchive;
 import com.example.respak.model.Farmer;
 import com.example.respak.service.FarmerService;
 import org.springframework.http.ResponseEntity;
@@ -20,21 +22,22 @@ public class FarmerController {
 
     // Получение списка фермеров с фильтрацией
     @GetMapping
-    public ResponseEntity<List<Farmer>> getFarmers(
+    public ResponseEntity<List<farmerDtoWithoutArchive>> getFarmers(
             @RequestParam(required = false) String organizationName,
             @RequestParam(required = false) Farmer.LegalForm legalForm,
             @RequestParam(required = false) String inn,
             @RequestParam(required = false) Long districtId,
             @RequestParam(required = false) LocalDate startDate,
             @RequestParam(required = false) LocalDate endDate) {
-        List<Farmer> farmers = farmerService.getFarmers(organizationName, legalForm, inn, districtId, startDate,
+        List<farmerDtoWithoutArchive> farmers = farmerService.getFarmers(organizationName, legalForm, inn, districtId,
+                startDate,
                 endDate);
         return ResponseEntity.ok(farmers);
     }
 
     // Добавление нового фермера
     @PostMapping
-    public ResponseEntity<Farmer> addFarmer(@RequestBody Farmer farmer) {
+    public ResponseEntity<Farmer> addFarmer(@RequestBody FarmerDto farmer) {
         Farmer createdFarmer = farmerService.addFarmer(farmer);
         return ResponseEntity.ok(createdFarmer);
     }

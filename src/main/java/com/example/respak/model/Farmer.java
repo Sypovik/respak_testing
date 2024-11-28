@@ -121,7 +121,7 @@ public class Farmer {
         this.registrationDate = registrationDate;
     }
 
-    public boolean isArchived() {
+    public boolean getArchived() {
         return archived;
     }
 
