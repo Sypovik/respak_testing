@@ -20,7 +20,6 @@ public interface DistrictRepository extends JpaRepository<District, Long> {
     // Получение всех неархивных районов
     List<District> findByArchivedFalse();
 
-    boolean existsById(String name);
-
-    // void deleteById(Long id);
+    // Получение списка районов с фильтрацией по id
+    List<District> findByIdAndArchivedFalse(Long id);
 }
