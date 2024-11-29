@@ -3,8 +3,8 @@ package com.example.dto;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.stream.Collectors;
 
-import com.example.respak.model.District;
 import com.example.respak.model.Farmer;
 import com.example.respak.model.Farmer.LegalForm;
 
@@ -15,19 +15,24 @@ public class farmerDtoWithoutArchive {
     private String inn;
     private String kpp;
     private String ogrn;
-    private District registrationDistrict;
-    private List<District> sowingDistricts;
+    private DistrictDtoWithoutArchive registrationDistrict;
+    private List<DistrictDtoWithoutArchive> sowingDistricts;
     private LocalDate registrationDate;
 
     public farmerDtoWithoutArchive(Farmer farmer) {
+        DistrictDtoWithoutArchive _registrationDistrict = new DistrictDtoWithoutArchive(
+                farmer.getRegistrationDistrict());
+        List<DistrictDtoWithoutArchive> _sowingDistricts = farmer.getSowingDistricts().stream()
+                .map(d -> new DistrictDtoWithoutArchive(d))
+                .collect(Collectors.toList());
         this.id = farmer.getId();
         this.organizationName = farmer.getOrganizationName();
         this.legalForm = farmer.getLegalForm();
         this.inn = farmer.getInn();
         this.kpp = farmer.getKpp();
         this.ogrn = farmer.getOgrn();
-        this.registrationDistrict = farmer.getRegistrationDistrict();
-        this.sowingDistricts = farmer.getSowingDistricts();
+        this.registrationDistrict = _registrationDistrict;
+        this.sowingDistricts = _sowingDistricts;
         this.registrationDate = farmer.getRegistrationDate();
     }
 
@@ -79,19 +84,19 @@ public class farmerDtoWithoutArchive {
         this.ogrn = ogrn;
     }
 
-    public District getRegistrationDistrict() {
+    public DistrictDtoWithoutArchive getRegistrationDistrict() {
         return registrationDistrict;
     }
 
-    public void setRegistrationDistrict(District registrationDistrict) {
+    public void setRegistrationDistrict(DistrictDtoWithoutArchive registrationDistrict) {
         this.registrationDistrict = registrationDistrict;
     }
 
-    public List<District> getSowingDistricts() {
+    public List<DistrictDtoWithoutArchive> getSowingDistricts() {
         return sowingDistricts;
     }
 
-    public void setSowingDistricts(List<District> sowingDistricts) {
+    public void setSowingDistricts(List<DistrictDtoWithoutArchive> sowingDistricts) {
         this.sowingDistricts = sowingDistricts;
     }
 
