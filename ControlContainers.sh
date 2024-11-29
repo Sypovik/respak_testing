@@ -29,5 +29,6 @@ elif [ $1 == "runMvn" ]; then
 
 elif [ $1 == "build" ]; then
     docker exec -it $APP mvn clean package
-    cp target/respak*.jar ./respak.jar
+    rm -r ./build/respak.jar
+    cp target/respak*.jar ./build/respak.jar
 fi
