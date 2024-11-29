@@ -37,8 +37,7 @@ public class FarmerService {
         } else if (inn != null) {
             farmers = farmerRepository.findByInnAndArchivedFalse(inn);
         } else if (districtId != null) {
-            District district = districtRepository.findById(districtId)
-                    .orElseThrow(() -> new RuntimeException("Район не найден"));
+            District district = districtRepository.findByIdAndArchivedFalse(districtId).get(0);
             farmers = farmerRepository.findByRegistrationDistrictAndArchivedFalse(district);
         } else if (startDate != null && endDate != null) {
             farmers = farmerRepository.findByRegistrationDateBetweenAndArchivedFalse(startDate, endDate);
