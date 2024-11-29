@@ -38,7 +38,7 @@ stop_containers() {
 # Функция для удаления контейнеров
 remove_containers() {
     echo "Удаление контейнеров..."
-    docker-compose -f "$DOCKER_COMPOSE_FILE" down
+    docker-compose -f "$DOCKER_COMPOSE_FILE" down -v
 }
 
 # Функция для удаления образов
