@@ -24,6 +24,11 @@ bash ControlApp.sh start
 Это действие:
 - Запускает контейнеры с базой данных PostgreSQL и приложением.
 - Выполняет сборку и запускает приложение в контейнере.
+Документация доступна по адресу
+
+```
+http://localhost:8080/swagger-ui/index.html#/
+```
 
 Остановите приложение при необходимости:
 
@@ -39,12 +44,12 @@ bash ControlApp.sh clean
 Для доступа к базе данных:
 
 ```bash
-bash ControlApp.sh db
+bash ControlContainers.sh db
 ```  
 Для входа в приложение:
 
 ```bash
-bash ControlApp.sh app
+bash ControlContainers.sh app
 ```  
 Ветки репозитория
 - **develop**: Основная ветка разработки. Здесь ведётся работа над функционалом, добавляются новые возможности, и исправляются ошибки.
