@@ -26,4 +26,8 @@ elif [ $1 == "dbShell" ]; then
 
 elif [ $1 == "runMvn" ]; then
     docker exec -it $APP mvn clean spring-boot:run
+
+elif [ $1 == "build" ]; then
+    docker exec -it $APP mvn clean package
+    cp target/respak*.jar ./respak.jar
 fi
