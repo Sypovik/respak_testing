@@ -18,6 +18,7 @@ public interface FarmerRepository extends JpaRepository<Farmer, Long> {
     // Фильтрация по ИНН
     List<Farmer> findByInnAndArchivedFalse(String inn);
 
+    // Фильтрация по коду регистрации
     List<Farmer> findByInn(String inn);
 
     // Фильтрация по району регистрации
@@ -29,5 +30,6 @@ public interface FarmerRepository extends JpaRepository<Farmer, Long> {
     // Получение всех архивных фермеров
     List<Farmer> findByArchivedFalse();
 
+    // Получение всех неархивных фермеров
     List<Farmer> findByArchivedTrue();
 }
