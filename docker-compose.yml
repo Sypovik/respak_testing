@@ -7,7 +7,7 @@ services:
       dockerfile: Dockerfile
       # command: /bin/bash
     ports:
-      - "8080:8080" # Приложение доступно на localhost:8080
+      - "${APP_PORT:-8080}:8080"
     depends_on:
       - db
     environment:

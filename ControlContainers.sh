@@ -1,34 +1,83 @@
 #!/bin/bash
 
-APP=app
-DB=db
+APP_CONTAINER=app
+DB_CONTAINER=db
 
-if [ $1 == "start" ]; then
-    docker-compose up -d --build
+DOCKER_COMPOSE_FILE="docker-compose.yml" # Имя файла docker-compose
 
-elif [ $1 == "stop" ]; then
-    docker-compose down
+# Функция для вывода меню
+show_menu() {
+    echo "Доступные действия:"
+    echo "start, db, app, stop, clean, clean-images"
+}
 
-elif [ $1 == "rmExited" ]; then
-    # Остановить и удалить APP и DB контейнеры
-    docker stop $(docker ps -aq --filter "name=$APP"\
-    --filter "name=$DB" --filter "status=exited"\
-    2>/dev/null) 
-    docker rm $(docker ps -aq --filter "name=$APP"\
-    --filter "name=$DB" --filter "status=exited"\
-    2>/dev/null)
+# Функция для вход в базу данных
+connect_to_db() {
+    echo "Подключаемся к базе данных..."
+    docker exec -it $DB_CONTAINER psql -U postgres -d respakdb
+}
 
-elif [ $1 == "appShell" ]; then
-    docker exec -it $APP /bin/bash
+# Функция для вход в приложение
+connect_to_app() {
+    echo "Подключаемся к приложению..."
+    docker exec -it $APP_CONTAINER bash
+}
 
-elif [ $1 == "dbShell" ]; then
-    docker exec -it $DB psql -U postgres -d respakdb
+# Функция для сборки контейнеров
+build_containers() {
+    echo "Сборка контейнеров..."
+    docker-compose -f "$DOCKER_COMPOSE_FILE" up --build -d
+}
 
-elif [ $1 == "runMvn" ]; then
-    docker exec -it $APP mvn clean spring-boot:run
+# Функция для остановки контейнеров
+stop_containers() {
+    echo "Остановка контейнеров..."
+    docker-compose -f "$DOCKER_COMPOSE_FILE" stop
+}
 
-elif [ $1 == "build" ]; then
-    docker exec -it $APP mvn clean package
-    rm -r ./build/respak.jar
-    cp target/respak*.jar ./build/respak.jar
+# Функция для удаления контейнеров
+remove_containers() {
+    echo "Удаление контейнеров..."
+    docker-compose -f "$DOCKER_COMPOSE_FILE" down
+}
+
+# Функция для удаления образов
+remove_images() {
+    echo "Удаление образов..."
+    docker-compose -f "$DOCKER_COMPOSE_FILE" down --rmi all
+}
+
+# Проверка наличия аргумента
+if [ -z "$1" ]; then
+    show_menu
+    exit 0
 fi
+
+# Выполнение действий в зависимости от параметра
+case "$1" in
+    start)
+        build_containers
+        ;;
+    db)
+        connect_to_db
+        ;;
+    app)
+        connect_to_app
+        ;;
+    stop)
+        stop_containers
+        ;;
+    clean)
+        remove_containers
+        ;;
+    clean-images)
+        stop_containers
+        remove_containers
+        remove_images
+        ;;
+    *)
+        echo "Неизвестное действие: $1"
+        show_menu
+        exit 1
+        ;;
+esac
