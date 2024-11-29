@@ -11,7 +11,7 @@ services:
     depends_on:
       - db
     environment:
-      SPRING_DATASOURCE_URL: jdbc:postgresql://db:5432/mydb
+      SPRING_DATASOURCE_URL: jdbc:postgresql://db:5432/respakdb
       SPRING_DATASOURCE_USERNAME: postgres
       SPRING_DATASOURCE_PASSWORD: password
     volumes:
@@ -19,12 +19,13 @@ services:
     tty: true
 
   db:
+    container_name: db
     image: postgres:9.6
     restart: always
     environment:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: password
-      POSTGRES_DB: mydb
+      POSTGRES_DB: respakdb
     ports:
       - "5432:5432" # PostgreSQL доступен на localhost:5432
     volumes:
