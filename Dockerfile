@@ -1,25 +1,7 @@
-# Используем базовый образ Debian
-FROM ubuntu
-# Устанавливаем необходимые пакеты
-RUN apt-get update && apt-get install -y \
-    openjdk-8-jdk \
-    maven \
-    git \
-    postgresql-client \
-    && apt-get clean
+FROM openjdk:8-jdk-slim
 
-# Устанавливаем переменную окружения для Java
-ENV JAVA_HOME=/usr/lib/jvm/java-8-openjdk-amd64
-ENV PATH=$JAVA_HOME/bin:$PATH
-
-# Указываем рабочую директорию
 WORKDIR /app
 
-# Копируем содержимое проекта
-COPY . .
+COPY respak.jar app.jar
 
-# Скачиваем зависимости и собираем проект
-# RUN mvn clean install -DskipTests
-
-# Указываем команду для запуска приложения
-# CMD ["java", "-jar", "target/your-application.jar"]
+CMD ["java", "-jar", "app.jar"]
