@@ -1,4 +1,4 @@
-package com.example.dto;
+package com.example.respak.dto;
 
 import com.example.respak.model.District;
 

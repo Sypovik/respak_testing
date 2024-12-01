@@ -1,5 +1,5 @@
 
-package com.example.dto;
+package com.example.respak.dto;
 
 import java.time.LocalDate;
 import java.util.List;
